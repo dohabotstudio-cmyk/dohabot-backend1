@@ -66,14 +66,19 @@ Rules:
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 200,
         system: systemPrompt,
         messages: [{ role: 'user', content: message }],
       }),
     })
+
     const data = await response.json()
-    if (data.error) return res.status(500).json({ error: data.error.message })
+    if (data.error) {
+      console.error('ANTHROPIC ERROR:', JSON.stringify(data.error))
+      return res.status(500).json({ error: data.error.message })
+    }
+
     const reply = data.content?.[0]?.text || 'عذراً، حدث خطأ. Sorry, something went wrong.'
     return res.status(200).json({ reply })
   } catch (err) {
